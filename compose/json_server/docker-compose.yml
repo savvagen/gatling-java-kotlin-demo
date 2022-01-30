@@ -1,0 +1,25 @@
+version: "3.5"
+services:
+  json-server:
+    image: savvagenchevskiy/json-server:latest
+    hostname: json-server
+    container_name: json-server
+    build:
+      context: ""
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    networks:
+      - performance
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 300M
+        reservations:
+          cpus: '0.5'
+          memory: 150M
+
+networks:
+  performance:
+    driver: bridge

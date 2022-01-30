@@ -1,0 +1,174 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.6.0"
+    id 'java'
+    id 'scala'
+    id 'idea'
+    id 'io.gatling.gradle' version '3.7.4'
+    id "de.undercouch.download" version "1.2"
+    id 'io.franzbecker.gradle-lombok' version '1.14'
+}
+
+
+ext {
+    gatlingVersion = "3.7.4"
+    scalaVersion = '2.13.7'
+}
+
+group 'com.example'
+version '1.0'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+    /*maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/<user_name>/<project_name>")
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+            password = project.findProperty("gpr.token") ?: System.getenv("TOKEN")
+        }
+    }*/
+}
+
+sourceSets {
+    main {
+        scala {
+            srcDirs = ['src/main/scala']
+        }
+    }
+    test {
+        scala {
+            srcDirs = ['src/test/scala']
+        }
+    }
+    gatling {
+        scala.srcDirs = ["src/gatling/scala", "src/main/scala"]
+        resources.srcDir "src/gatling/resources"
+    }
+}
+
+dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation(
+            'io.rest-assured:rest-assured:4.4.0',
+            'com.google.code.gson:gson:2.8.9',
+            'com.github.javafaker:javafaker:1.0.2',
+            'com.fasterxml.jackson.core:jackson-databind:2.13.0',
+    )
+    implementation("com.google.guava:guava:31.0.1-jre")
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    testCompileOnly 'org.projectlombok:lombok:1.18.22'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    // Gatling Dependencies
+    gatlingImplementation(
+            'org.apache.commons:commons-lang3:3.12.0',
+            'com.github.javafaker:javafaker:1.0.2',
+            'com.google.code.gson:gson:2.8.9',
+            'com.fasterxml.jackson.core:jackson-databind:2.13.0',
+            'ch.qos.logback:logback-classic:1.2.10',
+            'ch.qos.logback:logback-core:1.2.10',
+            'io.rest-assured:rest-assured:4.4.0',
+            "io.gatling:gatling-recorder:${gatlingVersion}"
+    )
+    gatlingImplementation("com.google.guava:guava:31.0.1-jre")
+    gatlingCompileOnly("org.projectlombok:lombok:1.18.22")
+    gatlingAnnotationProcessor("org.projectlombok:lombok:1.18.22")
+
+    // Gatling AMQP Plugin for RabbitMQ Testing
+    // + Gatling extension: https://github.com/TinkoffCreditSystems/gatling-picatinny
+    gatlingImplementation group: 'ru.tinkoff', name: 'gatling-amqp-plugin_2.13', version: '0.5.1'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+gatling {
+    gatlingVersion = "${project.gatlingVersion}"
+    scalaVersion = "${project.scalaVersion}"
+    simulations = {
+        include "**/simulations/LoadSimulation.scala"
+        // More variants
+        //include "**/simulations/StressTestSimulation.scala"
+        //include("**/*Simulation*.java",
+        // "**/*Simulation*.kt",
+        // "**/*Simulation*.scala"
+        // )
+    }
+    // include classes and resources from src/main
+    includeMainOutput = true
+    // include classes and resources from src/test
+    includeTestOutput = true
+    jvmArgs = ['-server', '-Xms2g', '-Xmx4g', '-XX:-UseGCOverheadLimit',
+               '-language:postfixOps',
+               '-Dgatling.useOldJenkinsJUnitSupport=true',
+               //'-Dgatling.conf.file=gatling-default.conf',
+               // --- Additional JVM args ---
+               // JVM args helper: https://www.oracle.com/java/technologies/javase/vmoptions-jsp.html
+               '-XX:+HeapDumpOnOutOfMemoryError',
+               // --- Garbage Collector Options ---
+               // watch article: https://developers.redhat.com/articles/2021/11/02/how-choose-best-java-garbage-collector#parallel_collector
+               '-XX:+UseG1GC',
+               '-XX:+UseStringDeduplication',
+               // ---------------------------------
+               '-XX:+ParallelRefProcEnabled',
+               '-XX:MaxInlineLevel=20',
+               '-XX:MaxTrivialSize=12',
+               '-XX:-UseBiasedLocking',
+               '-XX:+AggressiveOpts',
+               '-XX:+UseThreadPriorities',
+               //'-XX:+OptimizeStringConcat',
+               '-Djava.net.preferIPv4Stack=true',
+               '-Djava.net.preferIPv6Addresses=false'
+    ]
+    systemProperties = [
+            'file.encoding': 'UTF-8',
+            'gatling.useOldJenkinsJUnitSupport': true,
+            'gatling.conf.file': 'gatling.conf',
+    ]
+    // WARNING: options below only work when logback config file isn't provided
+    logLevel = 'WARN' // logback root level
+    logHttp = 'ALL' // set to 'ALL' for all HTTP traffic in TRACE, 'FAILURES' for failed HTTP traffic in DEBUG
+}
+
+// Solves Issue: "Entry gatling.conf is a duplicate but no duplicate handling strategy has been set."
+tasks.withType(Copy).all {
+    // duplicatesStrategy 'include'
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+//project.tasks.named("processGatlingResources", Copy) {
+//    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+//}
+
+clean.doFirst {
+    delete "${rootDir}/src/gatling/resources/gatling.log"
+    delete "${rootDir}/results"
+    delete "${rootDir}/gatling-${gatlingVersion}"
+    delete "${rootDir}/gatling-${gatlingVersion}.zip"
+}
+
+task gatlingRunner(type: JavaExec, dependsOn: classes) {
+    main = 'com.example.Runner'
+    classpath sourceSets.gatling.runtimeClasspath
+    jvmArgs = ['-server', '-Xms2g', '-Xmx4g', '-XX:-UseGCOverheadLimit']
+}
+
+
+task gatlingRunnerJava(type: JavaExec, dependsOn: classes) {
+    main = 'com.example.GatlingRunnerJava'
+    classpath sourceSets.gatling.runtimeClasspath
+    jvmArgs = ['-server', '-Xms2g', '-Xmx4g', '-XX:-UseGCOverheadLimit']
+}
+
+wrapper {
+    gradleVersion = "7.2"
+}
+
+lombok {
+    version = '1.18.4'
+    sha256 = ""
+}

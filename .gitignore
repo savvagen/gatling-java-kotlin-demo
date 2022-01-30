@@ -1,0 +1,5 @@
+.idea
+.gradle
+/results
+/build
+src/gatling/resources/gatling.log
