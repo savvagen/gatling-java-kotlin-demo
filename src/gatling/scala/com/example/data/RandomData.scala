@@ -4,16 +4,18 @@ import com.example.models.{Comment, Post, User}
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.javafaker.Faker
 import com.google.gson.Gson
-import io.gatling.core.Predef._
-import io.gatling.core.feeder.FeederBuilderBase
-
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util
 import java.util.Locale
-import scala.util.Random
 
 class RandomData {
+
+  def getProperty(propertyName: String, defaultValue: String): String = {
+    Option(System.getenv(propertyName))
+      .orElse(Option(System.getProperty(propertyName)))
+      .getOrElse(defaultValue)
+  }
 
   val faker = new Faker(new Locale("en_US"))
   val objectMapper = new ObjectMapper()
@@ -22,22 +24,6 @@ class RandomData {
   val simpleDateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
   def dateTimeNow(): String = OffsetDateTime.now.format(isoDateFormat)
-
-
-
-
-//  val categoryFeed: Iterator[Unit] = Iterator.continually {
-//    val cats = List("cats", "dogs", "test")
-//    Map("randomCategory" -> cats(Random.nextInt(cats.size)))
-//  }
-
-  val categoryFeed: FeederBuilderBase[String] = Array(
-    Map("category" -> "cats"),
-    Map("category" -> "dogs"),
-    Map("category" -> "test")
-  ).random
-
-
 
   def randomUser(): String = {
     objectMapper.writeValueAsString(new User()

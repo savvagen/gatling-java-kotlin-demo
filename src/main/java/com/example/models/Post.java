@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties({"id"})
 public class Post {
 
     int id;

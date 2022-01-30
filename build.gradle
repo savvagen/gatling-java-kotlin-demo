@@ -68,7 +68,7 @@ dependencies {
             'org.apache.commons:commons-lang3:3.12.0',
             'com.github.javafaker:javafaker:1.0.2',
             'com.google.code.gson:gson:2.8.9',
-            'com.fasterxml.jackson.core:jackson-databind:2.13.0',
+            'com.fasterxml.jackson.core:jackson-databind:2.13.1',
             'ch.qos.logback:logback-classic:1.2.10',
             'ch.qos.logback:logback-core:1.2.10',
             'io.rest-assured:rest-assured:4.4.0',

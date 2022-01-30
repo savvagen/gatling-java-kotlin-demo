@@ -1,0 +1,1435 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "limit": 100,
+        "name": "Annotations & Alerts",
+        "showIn": 0,
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "",
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 1,
+  "iteration": 1603806348158,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 24,
+      "panels": [],
+      "title": "Текущие значения",
+      "type": "row"
+    },
+    {
+      "aliasColors": {
+        "200 ms < t < 800 ms": "#FA6400",
+        "failed": "#C4162A"
+      },
+      "breakPoint": "100%",
+      "cacheTimeout": null,
+      "combine": {
+        "label": "Others",
+        "threshold": ""
+      },
+      "datasource": "$db",
+      "decimals": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fontSize": "80%",
+      "format": "locale",
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "id": 41,
+      "interval": null,
+      "legend": {
+        "header": "count",
+        "percentage": true,
+        "percentageDecimals": 0,
+        "show": false,
+        "values": true
+      },
+      "legendType": "Right side",
+      "links": [],
+      "maxDataPoints": 3,
+      "nullPointMode": "connected",
+      "pieType": "donut",
+      "pluginVersion": "6.2.5",
+      "strokeWidth": "2",
+      "targets": [
+        {
+          "alias": "t < 800 ms",
+          "groupBy": [],
+          "measurement": "gatling",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT sum(\"count\") FROM /^$Prefix$/ WHERE $timeFilter and \"mean\" <= 800 and \"status\" = 'ok' and \"request\" = 'allRequests'",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "count"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "sum"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "800 ms < t < 1200 ms",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT sum(\"count\") FROM /^$Prefix$/ WHERE $timeFilter and \"mean\" > 800 and \"mean\" <= 1200 and \"status\" = 'ok' and \"request\" = 'allRequests'",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "t > 1200ms",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT sum(\"count\") FROM /^$Prefix$/ WHERE $timeFilter and \"mean\" > 1200 and \"status\" = 'ok' and \"request\" = 'allRequests'",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "failed",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT sum(\"count\") FROM /^$Prefix$/ WHERE $timeFilter and \"status\" = 'ko' and \"request\" = 'allRequests'",
+          "rawQuery": true,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Indicators",
+      "transparent": true,
+      "type": "grafana-piechart-panel",
+      "valueName": "total"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": false,
+      "colors": [
+        "#299c46",
+        "rgba(237, 129, 40, 0.89)",
+        "#d44a3a"
+      ],
+      "datasource": "influxdb",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 4,
+        "y": 1
+      },
+      "id": 35,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(86, 166, 75, 0.16)",
+        "full": false,
+        "lineColor": "#73BF69",
+        "show": true,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "/^$Prefix$/",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT last(\"active\") FROM /^$Prefix.users$/ WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "count"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "status",
+              "operator": "=",
+              "value": "all"
+            }
+          ]
+        }
+      ],
+      "thresholds": "",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Active Users",
+      "transparent": true,
+      "type": "singlestat",
+      "valueFontSize": "150%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "current"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": false,
+      "colors": [
+        "#299c46",
+        "rgba(237, 129, 40, 0.89)",
+        "#d44a3a"
+      ],
+      "datasource": "influxdb",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 8,
+        "y": 1
+      },
+      "id": 33,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(86, 166, 75, 0.16)",
+        "full": false,
+        "lineColor": "#73BF69",
+        "show": true,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "/^$Prefix$/",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "count"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "status",
+              "operator": "=",
+              "value": "all"
+            }
+          ]
+        }
+      ],
+      "thresholds": "",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Current RPS",
+      "transparent": true,
+      "type": "singlestat",
+      "valueFontSize": "150%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "current"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": false,
+      "colors": [
+        "#299c46",
+        "rgba(237, 129, 40, 0.89)",
+        "#d44a3a"
+      ],
+      "datasource": "influxdb",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 12,
+        "y": 1
+      },
+      "id": 34,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(184, 119, 217, 0.22)",
+        "full": false,
+        "lineColor": "#B877D9",
+        "show": true,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "/^$Prefix$/",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT sum(\"count\") FROM /^$Prefix$/ WHERE (\"request\" = 'allRequests' AND \"status\" = 'all') AND $timeFilter  GROUP BY time($__interval)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "count"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "status",
+              "operator": "=",
+              "value": "all"
+            }
+          ]
+        }
+      ],
+      "thresholds": "",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Total requests",
+      "transparent": true,
+      "type": "singlestat",
+      "valueFontSize": "110%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "total"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": false,
+      "colors": [
+        "#299c46",
+        "rgba(237, 129, 40, 0.89)",
+        "#d44a3a"
+      ],
+      "datasource": "influxdb",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 16,
+        "y": 1
+      },
+      "id": 36,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(86, 166, 75, 0.16)",
+        "full": false,
+        "lineColor": "#73BF69",
+        "show": true,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "/^$Prefix$/",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT sum(\"count\") FROM /^$Prefix$/ WHERE (\"request\" = 'allRequests' AND \"status\" = 'ok') AND $timeFilter  GROUP BY time($__interval)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "count"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "status",
+              "operator": "=",
+              "value": "all"
+            }
+          ]
+        }
+      ],
+      "thresholds": "",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Total OK",
+      "transparent": true,
+      "type": "singlestat",
+      "valueFontSize": "110%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "total"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": false,
+      "colors": [
+        "#299c46",
+        "rgba(237, 129, 40, 0.89)",
+        "#d44a3a"
+      ],
+      "datasource": "influxdb",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "id": 37,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(242, 73, 92, 0.22)",
+        "full": false,
+        "lineColor": "#F2495C",
+        "show": true,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "/^$Prefix$/",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT sum(\"count\") FROM /^$Prefix$/ WHERE (\"request\" = 'allRequests' AND \"status\" = 'ko') AND $timeFilter  GROUP BY time($__interval)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "count"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "status",
+              "operator": "=",
+              "value": "all"
+            }
+          ]
+        }
+      ],
+      "thresholds": "",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Total KO",
+      "transparent": true,
+      "type": "singlestat",
+      "valueFontSize": "110%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "total"
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "id": 26,
+      "panels": [],
+      "title": "Запросы",
+      "type": "row"
+    },
+    {
+      "aliasColors": {
+        "Ac": "dark-orange"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "influxdb",
+      "decimals": null,
+      "description": "",
+      "editable": true,
+      "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "grid": {},
+      "gridPos": {
+        "h": 15,
+        "w": 24,
+        "x": 0,
+        "y": 7
+      },
+      "hiddenSeries": false,
+      "id": 27,
+      "interval": "1s",
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "sideWidth": 350,
+        "sort": "avg",
+        "sortDesc": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.2.1",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "alias": "Total rps",
+          "nullPointMode": "connected",
+          "steppedLine": true,
+          "yaxis": 2
+        },
+        {
+          "alias": "Active Users",
+          "yaxis": 2
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "alias": "$tag_request",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "request"
+              ],
+              "type": "tag"
+            }
+          ],
+          "hide": false,
+          "measurement": "/^$Prefix$/",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"$percentiles\") FROM /^$Prefix$/ WHERE (\"request\" <> 'allRequests') AND $timeFilter GROUP BY time($__interval), \"request\"",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "$percentiles"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "request",
+              "operator": "<>",
+              "value": "allRequests"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Response time by Request ($percentiles)",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "cumulative"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "ms",
+          "logBase": 1,
+          "max": null,
+          "min": 0,
+          "show": true
+        },
+        {
+          "decimals": null,
+          "format": "short",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {
+        "Total error": "red",
+        "Total pass": "green",
+        "Total requests": "purple",
+        "error": "#E24D42",
+        "pass": "green",
+        "total": "purple"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "influxdb",
+      "decimals": 0,
+      "editable": true,
+      "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "grid": {},
+      "gridPos": {
+        "h": 13,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "hiddenSeries": false,
+      "id": 3,
+      "interval": "10s",
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "hideEmpty": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": true,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 2,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.2.1",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "alias": "total",
+          "yaxis": 1
+        },
+        {
+          "alias": "Active Users",
+          "yaxis": 2
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": true,
+      "targets": [
+        {
+          "alias": "Total requests ($tag_simulation)",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"count\") FROM /^$Prefix$/ WHERE (\"request\" = 'allRequests' AND \"status\" = 'all') AND $timeFilter  GROUP BY time($__interval), \"simulation\"",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Total pass ($tag_simulation)",
+          "dsType": "influxdb",
+          "fields": [
+            {
+              "func": "mean",
+              "name": "value"
+            }
+          ],
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            }
+          ],
+          "hide": false,
+          "measurement": "/^$Prefix$/",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"count\") FROM /^$Prefix$/ WHERE (\"request\" = 'allRequests' AND \"status\" = 'ok') AND $timeFilter  GROUP BY time($__interval), \"simulation\"\n",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "count"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "sum"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "status",
+              "operator": "=",
+              "value": "ok"
+            }
+          ]
+        },
+        {
+          "alias": "Total error ($tag_simulation)",
+          "dsType": "influxdb",
+          "fields": [
+            {
+              "func": "mean",
+              "name": "value"
+            }
+          ],
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            }
+          ],
+          "hide": false,
+          "measurement": "/^$Prefix$/",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"count\") FROM /^$Prefix$/ WHERE (\"request\" = 'allRequests' AND \"status\" = 'ko') AND $timeFilter  GROUP BY time($__interval), \"simulation\"\n",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "count"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "status",
+              "operator": "=",
+              "value": "ko"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Errors vs. Passes",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": null,
+          "format": "short",
+          "logBase": 1,
+          "max": null,
+          "min": 0,
+          "show": true
+        },
+        {
+          "decimals": null,
+          "format": "short",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": true,
+        "alignLevel": 0
+      }
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 26,
+  "style": "dark",
+  "tags": [
+    "Gatling"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "influxdb",
+          "value": "influxdb"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "db",
+        "multi": false,
+        "name": "db",
+        "options": [],
+        "query": "influxdb",
+        "refresh": 1,
+        "regex": "influxdb",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "experiment",
+          "value": "experiment"
+        },
+        "datasource": "influxdb",
+        "definition": "show measurements",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Prefix",
+        "multi": false,
+        "name": "Prefix",
+        "options": [],
+        "query": "show measurements",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": "percentiles95",
+          "value": "percentiles95"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "percentiles",
+        "multi": false,
+        "name": "percentiles",
+        "options": [
+          {
+            "selected": false,
+            "text": "min",
+            "value": "min"
+          },
+          {
+            "selected": false,
+            "text": "percentiles50",
+            "value": "percentiles50"
+          },
+          {
+            "selected": false,
+            "text": "percentiles75",
+            "value": "percentiles75"
+          },
+          {
+            "selected": true,
+            "text": "percentiles95",
+            "value": "percentiles95"
+          },
+          {
+            "selected": false,
+            "text": "percentiles99",
+            "value": "percentiles99"
+          },
+          {
+            "selected": false,
+            "text": "max",
+            "value": "max"
+          }
+        ],
+        "query": "min,percentiles50,percentiles75,percentiles95,percentiles99,max",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-3h",
+    "to": "now"
+  },
+  "timepicker": {
+    "now": true,
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "browser",
+  "title": "Gatling Lite",
+  "uid": "u",
+  "version": 1
+}

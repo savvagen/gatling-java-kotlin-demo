@@ -1,11 +1,10 @@
 package com.example.scenarios
 
-import com.example.cases.ErrorCases.stopInjectorIfFailed
+import com.example.cases.ErrorHandling.stopInjectorIfFailed
+import com.example.data.Feeders.categoryFeed
 import io.gatling.core.Predef._
 import io.gatling.core.structure.{ChainBuilder, ScenarioBuilder}
 import io.gatling.http.Predef._
-
-import java.util.Date
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 
@@ -27,8 +26,8 @@ object PostReaderScenario extends BaseScenario {
     )
   }
 
-  def getPost: ChainBuilder = {
-    exec(http("GET /posts/ID").get(s"/posts/#{postId}")
+  def getPost(postId: String): ChainBuilder = {
+    exec(http("GET /posts/ID").get(s"/posts/$postId")
       .headers(defaultHeaders)
       .check(status.is(200))
       .check(jsonPath("$.id").notNull)
@@ -44,21 +43,21 @@ object PostReaderScenario extends BaseScenario {
     )
   }
 
+
   def scn(username: String, password: String): ChainBuilder = {
     exec(setUpScn(username, password))
       // Open Posts Page
       .exec(getPosts).exec(stopInjectorIfFailed)
       .pause(200.millis)
       .foreach("#{postIds}", "postId"){
-        exec(getPost).exec(stopInjectorIfFailed)
+        exec(getPost("#{postId}")).exec(stopInjectorIfFailed)
       }
       // Open random post
       .pause(2.seconds)
-      .exec(session => { session.set("postId", "#{postIds.random()}") })
-      .exec(getPost).exec(stopInjectorIfFailed)
+      .exec(getPost("#{postIds.random()}")).exec(stopInjectorIfFailed)
       .pause(10.millis)
       .foreach("#{commentIds}", "commentId"){
-        exec(getComment("#{commentId}")).exec(stopInjectorIfFailed)
+        exec(getComment("null")).exec(stopInjectorIfFailed)
       }
   }
 

@@ -7,8 +7,15 @@ import io.gatling.http.protocol.HttpProtocolBuilder
 
 class HttpSimulation extends Simulation {
 
+  def getProperty(propertyName: String, defaultValue: String): String = {
+    Option(System.getenv(propertyName))
+      .orElse(Option(System.getProperty(propertyName)))
+      .getOrElse(defaultValue)
+  }
 
-  var httpConf: HttpProtocolBuilder = http.baseUrl("http://localhost:3001")
+  def baseUrl: String = getProperty("BASE_URL", "http://localhost:3001")
+
+  var httpConf: HttpProtocolBuilder = http.baseUrl(baseUrl)
     .userAgentHeader("")
     .acceptHeader("application/json")
     .acceptCharsetHeader("utf-8")

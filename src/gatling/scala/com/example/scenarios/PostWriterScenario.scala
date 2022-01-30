@@ -1,15 +1,13 @@
 package com.example.scenarios
 
-import com.example.cases.ErrorCases.stopInjectorIfFailed
-import com.example.data.{RandomData, Templates}
-import com.example.models.{Post, User}
-import io.gatling.commons.validation._
+import com.example.cases.ErrorHandling.stopInjectorIfFailed
+import com.example.data.Feeders.randomUserFeeder
 import io.gatling.core.Predef._
-import io.gatling.core.structure.{ChainBuilder, ScenarioBuilder}
+import io.gatling.core.action.builder.ActionBuilder
 import io.gatling.http.Predef._
-import io.gatling.commons.validation._
+import io.gatling.core.structure.{ChainBuilder, ScenarioBuilder}
+import io.gatling.javaapi.core.exec.Execs
 
-import java.util.Date
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 
@@ -28,6 +26,7 @@ object PostWriterScenario extends BaseScenario {
   }
 
   def createUser(): ChainBuilder = {
+    //feed(randomUserFeeder)
     exec(http("POST /users").post("/users")
       .headers(authHeaders)
       .body(StringBody(
@@ -41,6 +40,7 @@ object PostWriterScenario extends BaseScenario {
            |""".stripMargin)).asJson
       //.body(StringBody(Templates.userTemplateRandom)).asJson
       //.body(StringBody(session => randomUser().success)).asJson
+      //.body(StringBody(session => session("randomUserJson").as[String])).asJson // Get Json from feeder
       .check(status.is(201))
       .check(jsonPath("$.id").ofType[Int].saveAs("userId"))
       .check(jsonPath("$.email").saveAs("userEmail"))
@@ -50,9 +50,7 @@ object PostWriterScenario extends BaseScenario {
   def createPost(): ChainBuilder = {
     exec(http("POST /posts").post("/posts")
       .header("Content Type", "application/json")
-      .body(StringBody(session =>
-        randomPost(session("userId").as[Int]))
-      ).asJson
+      .body(StringBody(session => randomPost(session("userId").as[Int]))).asJson
       .check(status.is(201))
       .check(jsonPath("$.id").saveAs("postId"))
     )
@@ -70,6 +68,7 @@ object PostWriterScenario extends BaseScenario {
     )
   }
 
+
   def scn(username: String, password: String, postsNumber: Range = 2 to 5, commentsNumber: Int = 3): ChainBuilder = {
     exec(setUpScn(username, password))
       .exec(getToken).exec(stopInjectorIfFailed)
@@ -78,19 +77,17 @@ object PostWriterScenario extends BaseScenario {
       .pause(1.second)
       // Create new Posts and Comments
       .repeat(1){
-        exec(createPost())
+        exec(createPost()).exec(stopInjectorIfFailed)
       }
-//      .exec(_.set("times", postsNumber))
-//      .repeat("${times.random()}", "postIndex"){
-//        exec(createPost()).exec(stopInjectorIfFailed)
-//          .pause(1.second)
-//          .repeat(commentsNumber, "commentIndex"){
-//            exec(createComment())
-//              .exec(stopInjectorIfFailed)
-//              .pause(1)
-//          }
-//      }
-
+      .exec(_.set("times", postsNumber))
+      .repeat("${times.random()}", "postIndex"){
+        exec(createPost()).exec(stopInjectorIfFailed)
+          .pause(1.second)
+          .repeat(commentsNumber, "commentIndex"){
+            exec(createComment()).exec(stopInjectorIfFailed)
+              .pause(1)
+          }
+      }
   }
 
 

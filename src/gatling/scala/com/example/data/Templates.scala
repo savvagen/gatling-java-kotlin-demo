@@ -12,11 +12,7 @@ import java.time.OffsetDateTime
 import java.util
 import java.util.{Date, Locale}
 
-object Templates {
-
-  var faker = new Faker(new Locale("en_US"))
-  var gson = new Gson()
-  var objectMapper = new ObjectMapper()
+object Templates extends RandomData {
 
   val userTemplate: Expression[String] = session =>
     for {
