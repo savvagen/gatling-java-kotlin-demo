@@ -1,6 +1,6 @@
 package com.example
 
-import com.example.data.RandomData
+import com.example.data.RandomDataJava
 import io.gatling.recorder.GatlingRecorder
 import io.gatling.recorder.config.RecorderPropertiesBuilder
 

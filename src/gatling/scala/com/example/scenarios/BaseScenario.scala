@@ -1,6 +1,6 @@
 package com.example.scenarios
 
-import com.example.data.RandomData
+import com.example.data.{RandomData}
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._

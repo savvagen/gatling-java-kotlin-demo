@@ -9,18 +9,8 @@ import static io.gatling.javaapi.http.HttpDsl.*;
 import java.time.Duration;
 import java.util.*;
 
-public class UserReader {
+public class PostWriterScnJava extends BaseScnJava {
 
-    public static Faker faker = new Faker(new Locale("en_US"));
-    public static Gson gson = new Gson();
-
-    public Map<String, String> defaultHeaders = new HashMap<String, String>();
-
-
-    public UserReader(){
-        defaultHeaders.put("Content Type", "application/json; charset=utf8");
-        defaultHeaders.put("Accept", "application/json");
-    }
 
     public ChainBuilder stopInjectorIfFailed() {
         return doIf(session -> session.asScala().isFailed()).then(
@@ -29,7 +19,7 @@ public class UserReader {
     }
 
     public ChainBuilder getToken() {
-        return exec(http("Get Token").get("/get_token")
+        return exec(http("GET /get_token").get("/get_token")
                 .basicAuth("test", "test")
                 .header("Content Type", "application/json")
                 .check(List.of(
@@ -38,8 +28,8 @@ public class UserReader {
                 )));
     }
 
-    public ChainBuilder registerUser() {
-        return exec(http("Register User").post("/users")
+    public ChainBuilder createUser() {
+        return exec(http("POST /users").post("/users")
                 .header("Authorization", "Bearer #{token}")
                 .headers(defaultHeaders)
                 .body(StringBody(JavaTemplates.userTemplate)).asJson()
@@ -49,8 +39,22 @@ public class UserReader {
                         .setCreatedAt("#{currentDate(<yyyy-MM-dd'T'HH:mm:ss.SSS'Z'>)}")
                 ))).asJson()*/
                 .check(status().is(201))
-                .check(jsonPath("$.id").saveAs("userId")));
+                .check(jsonPath("$.id").saveAs("userId"))
+        );
     }
+
+    public ChainBuilder createPost(){
+        return exec(http("POST /posts").post("/posts")
+                .headers(defaultHeaders)
+                .body(StringBody(session -> randomPost(session.getString("userEmail"))))
+                .check(status().is(201))
+                .check(jsonPath("$.id").saveAs("postId"))
+        );
+    }
+
+
+
+
 
     public ChainBuilder getUsers() {
         return exec(http("Get Users").get("/users")
@@ -70,8 +74,10 @@ public class UserReader {
             exec(session -> session.set("currentDate", new java.util.Date()))
                     .exec(getToken()).exec(stopInjectorIfFailed())
                     .pause(Duration.ofMillis(500))
-                    .exec(registerUser())
-                    .pause(Duration.ofMillis(500))
+                    .exec(createUser()).exec(stopInjectorIfFailed())
+                    .pause(Duration.ofSeconds(1))
+
+
                     .exec(getUsers())
                     .pause(Duration.ofSeconds(1))
                     .exec(getPosts())

@@ -1,5 +1,5 @@
 package com.example.cases
-import com.example.data.RandomData
+import com.example.data.{RandomData, RandomDataJava}
 import io.gatling.commons.stats.KO
 import io.gatling.core.Predef._
 import io.gatling.core.structure.{ChainBuilder, ScenarioBuilder}

@@ -1,6 +1,6 @@
 package com.example.data
 
-import com.example.data.RandomData.dateTimeNow
+import RandomDataJava.dateTimeNow
 import com.example.models.{Post, User}
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.javafaker.Faker
@@ -25,7 +25,7 @@ object Templates extends RandomData {
              |    "name": "${faker.name().firstName()} ${faker.name().lastName()}",
              |    "username": "${faker.name().username()}",
              |    "email": "${faker.internet().emailAddress()}",
-             |    "createdAt": "${RandomData.dateTimeNow()}"
+             |    "createdAt": "${RandomDataJava.dateTimeNow()}"
              |}
              |""".stripMargin
 
