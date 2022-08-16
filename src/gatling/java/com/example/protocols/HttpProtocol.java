@@ -13,7 +13,8 @@ public class HttpProtocol {
             .contentTypeHeader("application/json; charset=utf-8")
             .acceptHeader("application/json")
             .acceptCharsetHeader("utf-8")
-            .disableWarmUp()
+            .warmUp(baseUrl)
+            //.disableWarmUp()
             .disableCaching();
 
 }

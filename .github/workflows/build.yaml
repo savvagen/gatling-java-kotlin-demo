@@ -14,7 +14,7 @@ jobs:
         image: savvagenchevskiy/json-server:latest
         ports:
           - '3000:3000'
-        options: '--hostname=json_server --name=json_server'
+        options: '--platform=linux/amd64 --hostname=json_server --name=json_server'
     env:
       BASE_URL: "http://json_server:3000"
     steps:
