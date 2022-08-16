@@ -18,12 +18,16 @@ jobs:
     env:
       BASE_URL: "http://json_server:3000"
     steps:
-      - name: Checkout repository 🛎️
+      - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Test 🧪️
         run: |
           ./gradlew build gatlingRun
+
+      - name: Watch reports dir
+        run: |
+          ls -l ./results
 
       - name: Archive test report
         uses: actions/upload-artifact@v2
