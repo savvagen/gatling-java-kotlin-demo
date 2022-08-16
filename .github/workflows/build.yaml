@@ -6,7 +6,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    container: savvagenchevskiy/gatling:latest
+    container: gradle:7.2-jdk11
     name: gatling
     timeout-minutes: 30
     services:
