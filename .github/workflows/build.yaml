@@ -26,7 +26,8 @@ jobs:
           ./gradlew build gatlingRun
 
       - name: Rename Test Report Dir
-        run: mv ${{ github.workspace }}/results/* ${{ github.workspace }}/results/gatling-report
+        #run: mv ${{ github.workspace }}/results/* ${{ github.workspace }}/results/gatling-report
+        run: mv ./results/* ./results/gatling-report
 
       - name: Archive test report
         uses: actions/upload-artifact@v2
