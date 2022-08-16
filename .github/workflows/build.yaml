@@ -25,23 +25,24 @@ jobs:
         run: |
           ./gradlew build gatlingRun
 
-      - name: Watch reports dir
+      - name: Rename Test Report Dir
+        if: always()
         run: |
-          ls -l ./results
+          mv ./results/javasimulation-* ./results/javasimulation-report
 
       - name: Archive test report
         uses: actions/upload-artifact@v2
-        if: success()
+        if: always()
         with:
           name: gatling-report
-          path: results/*
+          path: results/javasimulation-report
           retention-days: 15
 
       - name: Deploy Report to GitHub Pages 🚀
-        if: success() # always()
+        if: success()
         uses: crazy-max/ghaction-github-pages@v2
         with:
           target_branch: gh-pages
-          build_dir: results
+          build_dir: results/javasimulation-report
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -16,7 +16,7 @@ import static io.gatling.javaapi.core.CoreDsl.*;
 // used for specifying durations with a unit, eg Duration.ofMinutes(5)
 
 
-public class JavaSimulation extends BaseSimulation {
+public class JavaLoadSimulation extends BaseSimulation {
 
     String configName = getProperty("CONFIG", "config/load.conf");
     Config config = ConfigFactory.load(configName).withFallback(ConfigFactory.load("config/load.conf"));
@@ -48,7 +48,7 @@ public class JavaSimulation extends BaseSimulation {
     }
 
 
-    public JavaSimulation() {
+    public JavaLoadSimulation() {
         var rampToUsers = config.getInt("performance.rampToUsers");
         var rampUpTime = config.getInt("performance.rampUpTime");
         var duration = config.getInt("performance.duration");
@@ -59,8 +59,8 @@ public class JavaSimulation extends BaseSimulation {
         postsNumber = config.getInt("performance.scenario.postsNumber");
 
         setUp(
-                //readerScn.injectOpen(atOnceUsers(1))
-                //writerScn.injectOpen(atOnceUsers(1))
+                //readerScn().injectOpen(atOnceUsers(1))
+                //writerScn(postsNumber).injectOpen(atOnceUsers(1))
                 loadProfile(rampUpTime, duration, 1, rampToUsers)
         ).maxDuration(maxDuration)
                 .protocols(httpConf)

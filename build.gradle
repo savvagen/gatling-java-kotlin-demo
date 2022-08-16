@@ -92,7 +92,7 @@ gatling {
     scalaVersion = "${project.scalaVersion}"
     simulations = {
         //include "**/simulations/LoadSimulation.scala" // --- Run Simulation from "scala" module
-        include "**/simulations/JavaSimulation.java"   // --- Run Simulation from "java" module
+        include "**/simulations/JavaLoadSimulation.java"   // --- Run Simulation from "java" module
         // More variants
         //include "**/simulations/StressTestSimulation.scala"
         //include("**/*Simulation*.java",
