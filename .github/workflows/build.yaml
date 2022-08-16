@@ -6,7 +6,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-20.04
-    container: gradle:7.2-jdk11
+    container: savvagenchevskiy/gatling:latest # gradle:7.2-jdk11
     name: gatling
     timeout-minutes: 30
     services:
@@ -26,16 +26,13 @@ jobs:
           ./gradlew build gatlingRun
 
       - name: Rename Test Report Dir
-        if: always()
-        run: |
-          mv ./results/javasimulation-* ./results/javasimulation-report
+        run: mv ${{ github.workspace }}/results/* ${{ github.workspace }}/results/gatling-report
 
       - name: Archive test report
         uses: actions/upload-artifact@v2
-        if: always()
         with:
           name: gatling-report
-          path: results/javasimulation-report
+          path: results/gatling-report
           retention-days: 15
 
       - name: Deploy Report to GitHub Pages 🚀
@@ -43,6 +40,6 @@ jobs:
         uses: crazy-max/ghaction-github-pages@v2
         with:
           target_branch: gh-pages
-          build_dir: results/javasimulation-report
+          build_dir: results/gatling-report
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
