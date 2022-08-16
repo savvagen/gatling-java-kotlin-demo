@@ -91,7 +91,8 @@ gatling {
     gatlingVersion = "${project.gatlingVersion}"
     scalaVersion = "${project.scalaVersion}"
     simulations = {
-        include "**/simulations/LoadSimulation.scala"
+        //include "**/simulations/LoadSimulation.scala" // --- Run Simulation from "scala" module
+        include "**/simulations/JavaSimulation.java"   // --- Run Simulation from "java" module
         // More variants
         //include "**/simulations/StressTestSimulation.scala"
         //include("**/*Simulation*.java",
@@ -104,7 +105,6 @@ gatling {
     // include classes and resources from src/test
     includeTestOutput = true
     jvmArgs = ['-server', '-Xms2g', '-Xmx4g', '-XX:-UseGCOverheadLimit',
-               '-language:postfixOps',
                '-Dgatling.useOldJenkinsJUnitSupport=true',
                //'-Dgatling.conf.file=gatling-default.conf',
                // --- Additional JVM args ---
@@ -119,9 +119,8 @@ gatling {
                '-XX:MaxInlineLevel=20',
                '-XX:MaxTrivialSize=12',
                '-XX:-UseBiasedLocking',
-               '-XX:+AggressiveOpts',
                '-XX:+UseThreadPriorities',
-               //'-XX:+OptimizeStringConcat',
+               '-XX:+OptimizeStringConcat',
                '-Djava.net.preferIPv4Stack=true',
                '-Djava.net.preferIPv6Addresses=false'
     ]
@@ -161,7 +160,11 @@ task gatlingRunner(type: JavaExec, dependsOn: classes) {
 task gatlingRunnerJava(type: JavaExec, dependsOn: classes) {
     main = 'com.example.GatlingRunnerJava'
     classpath sourceSets.gatling.runtimeClasspath
-    jvmArgs = ['-server', '-Xms2g', '-Xmx4g', '-XX:-UseGCOverheadLimit']
+    jvmArgs = ['-server', '-Xms2g', '-Xmx4g', '-XX:-UseGCOverheadLimit',
+               '-language:postfixOps',
+               '-XX:+UseG1GC',
+               '-XX:+UseStringDeduplication',
+    ]
 }
 
 wrapper {

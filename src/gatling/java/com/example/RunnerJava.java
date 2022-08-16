@@ -11,17 +11,11 @@ public class RunnerJava {
 
     public static void main(String[] args) {
 
-        System.out.println(dateTimeNow());
+        var props = new GatlingPropertiesBuilder();
+        props.simulationClass(JavaSimulation.class.getName());
 
-//        var props = new GatlingPropertiesBuilder();
-//        props.simulationClass(JavaSimulation.class.getName());
-//
-//        Gatling.fromMap(props.build());
+        Gatling.fromMap(props.build());
 
     }
 
-
-    public static String dateTimeNow(){
-        return OffsetDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
-    }
 }

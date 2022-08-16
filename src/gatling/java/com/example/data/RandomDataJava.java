@@ -21,6 +21,10 @@ public class RandomDataJava {
     public static DateTimeFormatter isoDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     public static DateTimeFormatter simpleDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+    public static String randomCategory(){
+        return List.of("cats", "dogs", "test").get(faker.random().nextInt(0, 2));
+    }
+
     public static String dateTimeNow(){
         return OffsetDateTime.now().format(isoDateFormat);
     }
@@ -34,12 +38,12 @@ public class RandomDataJava {
         );
     }
 
-    public String randomPost(String userEmail){
+    public String randomPost(String userId){
         return gson.toJson(Post.builder()
                 .withTitle("Test Post From " + OffsetDateTime.now() + " " + faker.random().nextInt(100000, 999999))
                 .withSubject("Performance Testing")
                 .withBody(faker.lorem().sentence())
-                .withUser(Integer.parseInt(userEmail))
+                .withUser(Integer.parseInt(userId))
                 .withCreatedAt(dateTimeNow())
                 .withComments(List.of(faker.random().nextInt(50, 100), faker.random().nextInt(1, 49)))
         );

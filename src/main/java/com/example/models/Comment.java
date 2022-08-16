@@ -9,7 +9,6 @@ import java.util.List;
 @JsonIgnoreProperties({"id"})
 public class Comment {
 
-
     private int id;
     private int post;
     private String name;

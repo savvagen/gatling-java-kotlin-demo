@@ -10,6 +10,8 @@ function generateToken(length) {
     return result;
 }
 
+let randomId = (min, max) => Math.floor(Math.random() * (max - min)) + min
+
 module.exports = () => {
 
     const data = {
@@ -22,58 +24,52 @@ module.exports = () => {
     }
 
     // Create 100 users
-    for (let i = 0; i < 100; i++) {
+    for (let i = 1; i < 100; i++) {
         data.users.push(
             {
-                id: i+1,
-                name: `user${i+1}`,
-                username: `user_name${i+1}`,
-                email: `user${i+1}@test.com`,
+                id: i,
+                name: `user${i}`,
+                username: `user_name${i}`,
+                email: `user${i}@test.com`,
                 createdAt: new Date().toISOString()
             })
     }
 
     // Create 100 posts
     const possibleCategories = ["test", "cats", "dogs"]
-    for (let i = 0; i < 100; i++) {
+    for (let i = 1; i < 100; i++) {
         data.posts.push(
             {
-                id: i+1,
-                title: `Post ${i+1}`,
-                subject: `Test Subject ${i+1}`,
-                body: `Hello This is a post ${i+1}`,
+                id: i,
+                title: `Post ${i}`,
+                subject: `Test Subject ${i}`,
+                body: `Hello This is a post ${i}`,
                 category: possibleCategories[Math.floor(Math.random() * possibleCategories.length)], //`cats`,
-                user: data.users[i].id,
-                comments: [ i+1, Math.floor(Math.random() * 100), Math.floor(Math.random() * 100) ],
+                user: data.users[i-1].id,
+                comments: [ i, randomId(1, 100), randomId(1, 100) ],
                 createdAt: new Date().toISOString()
             })
     }
 
     //Create 1000 comments
-    let comId = 0;
-    let n;
-
-    for (let i = 0; i < 100; i++){
-        n = 0
-        while(n !== 10) {
-            n++;
-            comId ++;
-            data.comments.push(
-                {
-                    id: comId,
-                    post: i + 1,
-                    name: `Test comment-${comId}`,
-                    email: data.users[i].email,
-                    likes: [Math.floor(Math.random() * 100)],
-                    dislikes: [Math.floor(Math.random() * 100)],
-                    body: `Hello There. Hello to User ${data.users[i].email}`,
-                    createdAt: new Date().toISOString()
-                })
-        }
+    for (let i = 1; i < 1000; i++){
+        let randomUserInd = randomId(0, data.users.length-1)
+        let randomPostId = randomId(1, data.posts.length)
+        data.comments.push(
+            {
+                id: i,
+                post: randomPostId,
+                name: `Test comment-${i}`,
+                email: data.users[randomUserInd].email,
+                likes: [randomId(1, 100)],
+                dislikes: [randomId(1, 100)],
+                body: `Hello There. Hello to User ${data.users[randomUserInd].email}`,
+                createdAt: new Date().toISOString()
+            })
     }
 
-    // Create 200 tasks
-    for (let i = 1; i < 201; i++){
+    // Create 1000 tasks
+    for (let i = 1; i < 1000; i++){
         data.tasks.push({
             id: i,
             todo: i,
@@ -84,26 +80,18 @@ module.exports = () => {
         })
     }
 
-    // Create 200 todos
-    let todoId = 0;
-    let t;
-
-    for (let i = 1; i < 100 + 1; i++){
-        t = 1
-        while(t !== 3){
-            t++;
-            todoId++;
-            data.todos.push({
-                id: todoId,
-                user: data.users[t].id,
-                title: `Task ${todoId}`,
-                completed: true,
-                createdAt: new Date().toISOString(),
-                tasks: [
-                    data.tasks[i]
-                ]
-            })
-        }
+    // Create 2000 todos
+    for (let i = 1; i < 2000 + 1; i++){
+        data.todos.push({
+            id: i,
+            user: randomId(1, 100),
+            title: `Task to do ${i}`,
+            completed: true,
+            createdAt: new Date().toISOString(),
+            tasks: [
+                data.tasks[randomId(0, data.tasks.length-1)]
+            ]
+        })
     }
 
     return data

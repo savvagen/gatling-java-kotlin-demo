@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -26,8 +27,13 @@ public class Post {
     private String body;
     private String category;
     private int user;
-    private List<Integer> comments = new ArrayList<>();
+    private List<Integer> comments;
     private String createdAt;
+
+    public Post addComments(Integer... commentIds){
+        this.comments.addAll(Arrays.asList(commentIds));
+        return this;
+    }
 
 }
 
