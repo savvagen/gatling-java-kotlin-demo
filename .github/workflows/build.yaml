@@ -24,3 +24,20 @@ jobs:
       - name: Test 🧪️
         run: |
           ./gradlew build gatlingRun
+
+      - name: Archive test report
+        uses: actions/upload-artifact@v2
+        if: success()
+        with:
+          name: gatling-report
+          path: results/*
+          retention-days: 15
+
+      - name: Deploy Report to GitHub Pages 🚀
+        if: success() # always()
+        uses: crazy-max/ghaction-github-pages@v2
+        with:
+          target_branch: gh-pages
+          build_dir: results
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
