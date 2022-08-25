@@ -60,7 +60,7 @@ public class JavaLoadSimulation extends BaseSimulation {
 
         setUp(
                 //readerScn().injectOpen(atOnceUsers(1))
-                //writerScn(postsNumber).injectOpen(atOnceUsers(1))
+                //writerScn(postsNumber).injectOpen(atOnceUsers(2))
                 loadProfile(rampUpTime, duration, 1, rampToUsers)
         ).maxDuration(maxDuration)
                 .protocols(httpConf)

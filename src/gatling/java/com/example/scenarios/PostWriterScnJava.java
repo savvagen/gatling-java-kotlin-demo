@@ -17,11 +17,7 @@ import java.util.*;
 public class PostWriterScnJava extends BaseScnJava {
 
 
-    public ChainBuilder stopInjectorIfFailed() {
-        return doIf(session -> session.asScala().isFailed()).then(
-                pause(Duration.ofSeconds(10)).stopInjector("Stopping Injector after 10 seconds. Cause: failed request")
-        );
-    }
+
 
     public ChainBuilder getToken() {
         return exec(http("Get Token").get("/get_token")
@@ -37,13 +33,14 @@ public class PostWriterScnJava extends BaseScnJava {
         return exec(http("Create User").post("/users")
                 .header("Authorization", "Bearer #{token}")
                 .headers(defaultHeaders)
-                .body(StringBody(JavaTemplates.userTemplate)).asJson()
                 /*.body(StringBody(session -> gson.toJson(new User()
                         .setName(faker.name().firstName() + " " + faker.name().lastName())
                         .setUsername(faker.name().username())
                         .setEmail(faker.internet().emailAddress())
                         .setCreatedAt(session.getString("currentDate"))
                 ))).asJson()*/
+                //.body(StringBody(session -> randomUser())).asJson()
+                .body(StringBody(JavaTemplates.userTemplate)).asJson()
                 .check(status().is(201))
                 .check(jsonPath("$.id").saveAs("userId"))
                 .check(jsonPath("$.email").saveAs("userEmail"))

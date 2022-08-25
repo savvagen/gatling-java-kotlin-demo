@@ -59,7 +59,7 @@ object PostWriterScenario extends BaseScenario {
   def createComment(): ChainBuilder = {
     exec(http("POST /comments").post("/comments")
       .header("Content Type", "application/json")
-      .body(StringBody(session=>
+      .body(StringBody(session =>
         randomComment(session("postId").as[Int], session("userEmail").as[String]))
       ).asJson
       .check(status.is(201))

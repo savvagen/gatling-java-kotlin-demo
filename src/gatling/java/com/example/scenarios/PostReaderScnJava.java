@@ -12,12 +12,6 @@ import static io.gatling.javaapi.http.HttpDsl.*;
 
 public class PostReaderScnJava extends BaseScnJava {
 
-    public ChainBuilder stopInjectorIfFailed() {
-        return doIf(session -> session.asScala().isFailed()).then(
-                pause(Duration.ofSeconds(10)).stopInjector("Stopping Injector after 10 seconds. Cause: failed request")
-        );
-    }
-
     public ChainBuilder getRandomUser() {
         return exec(http("Get Users").get("/users/" + faker.random().nextInt(1,100))
                 .header("Content Type", "application/json")
@@ -29,6 +23,7 @@ public class PostReaderScnJava extends BaseScnJava {
     public ChainBuilder getTodos(){
         return exec(http("Get Todos").get("/todos")
                 .queryParam("user", "#{userId}")
+                .check(jsonPath("$[*]").count().transform(Integer::valueOf).gte(1))
                 .check(status().is(200))
         );
     }
@@ -37,6 +32,7 @@ public class PostReaderScnJava extends BaseScnJava {
         return exec(http("Get Posts").get("/posts")
                 .header("Content Type", "application/json")
                 .check(status().is(200))
+                .check(jsonPath("$[*]").count().transform(Integer::valueOf).gte(99))
                 //.check(jsonPath("$[*].comments").ofList().findRandom().saveAs("randomComments"))
                 .check(jsonPath("$[*].comments")
                         .findRandom()
@@ -75,7 +71,14 @@ public class PostReaderScnJava extends BaseScnJava {
             put("commentId", randNum);
             put("commentIdIsLessThan50", randNum < 50);
         }});
+    }
 
+    public Session resetCommentId(Session session){
+        if (session.getInt("commentId") > 2000){
+            return session.set("commentId", faker.random().nextInt(1, 2000));
+        } else {
+            return session;
+        }
     }
 
     public ChainBuilder scn() {
@@ -87,6 +90,7 @@ public class PostReaderScnJava extends BaseScnJava {
                 // Iterate through the list of ids
                 .foreach("#{randomComments}", "commentId").on(
                         exec(getComment()).exec(stopInjectorIfFailed())
+                                .exec(this::resetCommentId)
                                 .exec(getTodo("#{commentId}")).exec(stopInjectorIfFailed())
                                 .pause(Duration.ofMillis(500))
                 )

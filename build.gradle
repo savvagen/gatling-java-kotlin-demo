@@ -65,6 +65,7 @@ dependencies {
 
     // Gatling Dependencies
     gatlingImplementation(
+            'org.jetbrains.kotlin:kotlin-stdlib:1.6.0',
             'org.apache.commons:commons-lang3:3.12.0',
             'com.github.javafaker:javafaker:1.0.2',
             'com.google.code.gson:gson:2.8.9',
@@ -81,6 +82,7 @@ dependencies {
     // Gatling AMQP Plugin for RabbitMQ Testing
     // + Gatling extension: https://github.com/TinkoffCreditSystems/gatling-picatinny
     gatlingImplementation group: 'ru.tinkoff', name: 'gatling-amqp-plugin_2.13', version: '0.5.1'
+    implementation "org.jetbrains.kotlin:kotlin-script-runtime:1.6.0"
 }
 
 test {
@@ -92,13 +94,10 @@ gatling {
     scalaVersion = "${project.scalaVersion}"
     simulations = {
         //include "**/simulations/LoadSimulation.scala" // --- Run Simulation from "scala" module
-        include "**/simulations/JavaLoadSimulation.java"   // --- Run Simulation from "java" module
+        //include "**/simulations/JavaLoadSimulation.java"   // --- Run Simulation from "java" module
+        include "**/simulations/KotlinLoadSimulation.kt"   // --- Run Simulation from "kotlin" module
         // More variants
-        //include "**/simulations/StressTestSimulation.scala"
-        //include("**/*Simulation*.java",
-        // "**/*Simulation*.kt",
-        // "**/*Simulation*.scala"
-        // )
+        //include("**/*Simulation*.java", "**/*Simulation*.kt", "**/*Simulation*.scala")
     }
     // include classes and resources from src/main
     includeMainOutput = true
