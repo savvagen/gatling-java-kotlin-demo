@@ -11,8 +11,8 @@ import io.gatling.javaapi.core.PopulationBuilder
 
 class KotlinLoadSimulation : KotlinBaseSimulation() {
 
-    val config: Config = ConfigFactory.load(getProperty("CONFIG", "config/load.conf"))
-        .withFallback(ConfigFactory.load("config/load.conf"))
+    val configName = getProperty("CONFIG", "config/load.conf")
+    val config: Config = ConfigFactory.load(configName).withFallback(ConfigFactory.load("config/load.conf"))
 
     val rampToUsers = config.getInt("performance.rampToUsers")
     val rampUpTime = config.getLong("performance.rampUpTime")
@@ -30,8 +30,6 @@ class KotlinLoadSimulation : KotlinBaseSimulation() {
 
     private val errorCounterScn = scenario("Error Counter")
         .exec(FailOverScenario.scn())
-
-
 
 
     private fun loadProfile(rampUpTime: Long, duration: Long, minUsers: Int = 1, maxUsers: Int): List<PopulationBuilder> =
