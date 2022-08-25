@@ -1,4 +1,3 @@
-import com.example.simulations.BaseSimulation
 import io.gatling.javaapi.core.Simulation
 import io.gatling.javaapi.http.HttpDsl
 
