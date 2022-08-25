@@ -2,10 +2,55 @@ name: Gatling Simulation
 on:
   push:
     branches: '*'
+  workflow_dispatch:
+    inputs:
+      simulatioName:
+        default: 'KotlinLoadSimulation.kt'
+        required: true
+        description: 'Simulation Name'
+      configName:
+        default: 'none'
+        required: true
+        description: 'Config name, example: "config/load.conf"'
+      baseUrl:
+        default: 'http://json_server:3000'
+        required: true
+        description: 'Base Url'
 
 jobs:
+  setup:
+    runs-on: ubuntu-20.04
+    env:
+      SIMULATION_NAME: 'KotlinLoadSimulation.kt'
+      CONFIG_NAME: 'config/load.conf'
+      BASE_URL: 'http://json_server:3000'
+    outputs:
+      simulationName: ${{ steps.setup_step.outputs.simulatioName }}
+      configName: ${{ steps.setup_step.outputs.configName }}
+      baseUrl: ${{ steps.setup_step.outputs.baseUrl }}
+    steps:
+      - name: Overwrite Variables
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo "SIMULATION_NAME=${{ github.event.inputs.simulatioName }}" >> $GITHUB_ENV
+          echo "CONFIG_NAME=${{ github.event.inputs.configName }}" >> $GITHUB_ENV
+          echo "BASE_URL=${{ github.event.inputs.baseUrl }}" >> $GITHUB_ENV
+      - name: Setup Variables
+        id: setup_step
+        run: |
+          echo "Starting Performance Test with configurations:"
+          echo "SIMULATION_NAME: ${{ env.SIMULATION_NAME }}"
+          echo "CONFIG_NAME: ${{ env.CONFIG_NAME }}"
+          echo "BASE_URL: ${{ env.BASE_URL }}"
+          echo "::set-output name=simulationName::${{ env.SIMULATION_NAME }}"
+          echo "::set-output name=configName::${{ env.CONFIG_NAME }}"
+          echo "::set-output name=baseUrl::${{ env.BASE_URL }}"
+  
+
   test:
     runs-on: ubuntu-20.04
+    needs:
+      - setup
     container: savvagenchevskiy/gatling:latest # gradle:7.2-jdk11
     name: gatling
     timeout-minutes: 30
@@ -16,7 +61,9 @@ jobs:
           - '3000:3000'
         options: '--hostname=json_server --name=json_server'
     env:
-      BASE_URL: "http://json_server:3000"
+      SIMULATION_NAME: "${{ needs.setup.outputs.simulationName }}"
+      CONFIG_NAME: "${{ needs.setup.outputs.configName }}"
+      BASE_URL: "${{ needs.setup.outputs.baseUrl }}"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2

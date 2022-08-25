@@ -18,10 +18,9 @@ import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class JavaLoadSimulation extends BaseSimulation {
 
-    String configName = getProperty("CONFIG", "config/load.conf");
+    String configName = getProperty("CONFIG_NAME", "config/load.conf");
     Config config = ConfigFactory.load(configName).withFallback(ConfigFactory.load("config/load.conf"));
     int postsNumber;
-
 
     ScenarioBuilder writerScn(int postsNumber) {
       return scenario("PostWriterScenario")

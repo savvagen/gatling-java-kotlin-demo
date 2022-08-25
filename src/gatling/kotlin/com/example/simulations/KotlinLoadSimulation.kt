@@ -11,7 +11,7 @@ import io.gatling.javaapi.core.PopulationBuilder
 
 class KotlinLoadSimulation : KotlinBaseSimulation() {
 
-    val configName = getProperty("CONFIG", "config/load.conf")
+    val configName = getProperty("CONFIG_NAME", "config/load.conf")
     val config: Config = ConfigFactory.load(configName).withFallback(ConfigFactory.load("config/load.conf"))
 
     val rampToUsers = config.getInt("performance.rampToUsers")

@@ -12,6 +12,7 @@ plugins {
 ext {
     gatlingVersion = "3.7.4"
     scalaVersion = '2.13.7'
+    simulationName = System.getenv("SIMULATION_NAME") ?: "LoadSimulation.scala"
 }
 
 group 'com.example'
@@ -90,12 +91,14 @@ test {
 }
 
 gatling {
+    //String simulationName = System.getenv("SIMULATION_NAME") ?: "LoadSimulation.scala"
     gatlingVersion = "${project.gatlingVersion}"
     scalaVersion = "${project.scalaVersion}"
     simulations = {
+        include "**/simulations/${simulationName}"
         //include "**/simulations/LoadSimulation.scala" // --- Run Simulation from "scala" module
         //include "**/simulations/JavaLoadSimulation.java"   // --- Run Simulation from "java" module
-        include "**/simulations/KotlinLoadSimulation.kt"   // --- Run Simulation from "kotlin" module
+        //include "**/simulations/KotlinLoadSimulation.kt"   // --- Run Simulation from "kotlin" module
         // More variants
         //include("**/*Simulation*.java", "**/*Simulation*.kt", "**/*Simulation*.scala")
     }
