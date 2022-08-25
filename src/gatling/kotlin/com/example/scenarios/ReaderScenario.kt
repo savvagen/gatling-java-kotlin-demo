@@ -28,7 +28,7 @@ class ReaderScenario {
     private fun getPosts(): HttpRequestActionBuilder =
         http("Get Posts").get("/posts")
             .headers(defaultHeaders)
-            .check(status shouldBe 201)
+            .check(status shouldBe 200)
             .check(jsonPath("$[*]").count.gte(99)) // jsonPath("$[*]").count().transform(Integer::valueOf).gte(1000)
             .check(jsonPath("$[*].comments").findRandom()
                 .transform(::stringArrToList)
