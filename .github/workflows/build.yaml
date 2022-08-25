@@ -4,7 +4,7 @@ on:
     branches: '*'
   workflow_dispatch:
     inputs:
-      simulatioName:
+      simulationName:
         default: 'KotlinLoadSimulation.kt'
         required: true
         description: 'Simulation Name'
@@ -25,7 +25,7 @@ jobs:
       CONFIG_NAME: 'config/load.conf'
       BASE_URL: 'http://json_server:3000'
     outputs:
-      simulationName: ${{ steps.setup_step.outputs.simulatioName }}
+      simulationName: ${{ steps.setup_step.outputs.simulationName }}
       configName: ${{ steps.setup_step.outputs.configName }}
       baseUrl: ${{ steps.setup_step.outputs.baseUrl }}
     steps:
