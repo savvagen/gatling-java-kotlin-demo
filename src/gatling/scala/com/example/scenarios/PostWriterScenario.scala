@@ -1,13 +1,9 @@
 package com.example.scenarios
 
 import com.example.cases.ErrorHandling.stopInjectorIfFailed
-import com.example.data.Feeders.randomUserFeeder
 import io.gatling.core.Predef._
-import io.gatling.core.action.builder.ActionBuilder
 import io.gatling.http.Predef._
-import io.gatling.core.structure.{ChainBuilder, ScenarioBuilder}
-import io.gatling.javaapi.core.exec.Execs
-
+import io.gatling.core.structure.ChainBuilder
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 
@@ -29,7 +25,7 @@ object PostWriterScenario extends BaseScenario {
     //feed(randomUserFeeder)
     exec(http("POST /users").post("/users")
       .headers(authHeaders)
-      .body(StringBody(
+      .body(StringBody(session =>
         s"""
            |{
            |    "name": "${faker.name().firstName()} ${faker.name().lastName()}",

@@ -2,16 +2,17 @@ package com.example.simulations
 
 import com.example.protocols.HttpSimulation
 import io.gatling.core.Predef._
-import io.gatling.core.structure.{ChainBuilder, PopulationBuilder, ScenarioBuilder}
 
 import scala.language.postfixOps
 import com.example.scenarios.{PostReaderScenario, PostWriterScenario}
 import com.typesafe.config.{Config, ConfigFactory}
 import io.gatling.core.controller.inject.closed.ClosedInjectionStep
+import io.gatling.core.structure.{PopulationBuilder, ScenarioBuilder}
+import io.gatling.http.Predef._
 
 import scala.concurrent.duration.DurationInt
 
-class LoadSimulation extends HttpSimulation {
+class ScalaLoadSimulation extends HttpSimulation {
 
 
   def username: String = getProperty("USERNAME", "test")
@@ -32,12 +33,11 @@ class LoadSimulation extends HttpSimulation {
   val successfulRequestsPercentGte: Int = config.getInt("performance.global.assertions.successfulRequests.percent.gte")
 
 
-  val writerScn: ScenarioBuilder = scenario("Post Writer Scenario")
+  val writerScn: ScenarioBuilder = scenario("Writer Scenario")
     .exec(PostWriterScenario.scn(username, password, 2 to 4, 2))
 
-  val readerScn: ScenarioBuilder = scenario("Post Reader Scenario")
+  val readerScn: ScenarioBuilder = scenario("Reader Scenario")
     .exec(PostReaderScenario.scn(username, password))
-
 
 
   def loadModelSteps50Prc(): Seq[ClosedInjectionStep] = {
@@ -62,7 +62,7 @@ class LoadSimulation extends HttpSimulation {
   }
 
   setUp(
-    //writerScn.inject(atOnceUsers(1))
+    //readerScn.inject(atOnceUsers(1))
     loadProfile()
   ).assertions(
     global.responseTime.max.lte(responseTimeMaxLte),

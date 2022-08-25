@@ -1,12 +1,7 @@
 package com.example
 
-import com.example.data.RandomDataJava
 import io.gatling.recorder.GatlingRecorder
 import io.gatling.recorder.config.RecorderPropertiesBuilder
-
-import java.net.URI
-import java.nio.file
-import scala.Option
 import java.nio.file.Path
 
 object Recorder extends App {

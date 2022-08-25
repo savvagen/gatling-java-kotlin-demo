@@ -2,9 +2,12 @@ package com.example.scenarios
 
 import com.example.cases.ErrorHandling.stopInjectorIfFailed
 import com.example.data.Feeders.categoryFeed
+import com.example.data.RandomScalaData
 import io.gatling.core.Predef._
 import io.gatling.core.structure.{ChainBuilder, ScenarioBuilder}
 import io.gatling.http.Predef._
+
+import java.util.Date
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 
@@ -57,7 +60,7 @@ object PostReaderScenario extends BaseScenario {
       .exec(getPost("#{postIds.random()}")).exec(stopInjectorIfFailed)
       .pause(10.millis)
       .foreach("#{commentIds}", "commentId"){
-        exec(getComment("null")).exec(stopInjectorIfFailed)
+          exec(getComment("#{commentId}")).exec(stopInjectorIfFailed)
       }
   }
 

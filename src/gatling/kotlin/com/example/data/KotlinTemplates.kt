@@ -5,7 +5,7 @@ import java.util.function.Function
 
 internal object KotlinTemplates {
 
-    val userTemplate = Function { session: Session ->
+    val userTemplate = Function { _: Session ->
         fakeUser()
     }
 

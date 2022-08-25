@@ -63,18 +63,3 @@ fun fakeComment(post: Int, email: String): String =
         post = post,
         createdAt = dateTimeNow(),
     ).toJson
-
-class RandomData {
-
-    companion object {
-        val fakeUser: String by lazy {
-            User(
-                name = "${faker.name().firstName()} ${faker.name().lastName()}",
-                username = faker.name().username(),
-                email = faker.internet().emailAddress(),
-                createdAt = dateTimeNow()
-            ).toJson
-        }
-    }
-
-}

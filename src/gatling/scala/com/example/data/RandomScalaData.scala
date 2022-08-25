@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter
 import java.util
 import java.util.Locale
 
-class RandomData {
+class RandomScalaData {
 
   def getProperty(propertyName: String, defaultValue: String): String = {
     Option(System.getenv(propertyName))
@@ -63,10 +63,9 @@ class RandomData {
 
 }
 
-object RandomData extends RandomData {
+object RandomScalaData extends RandomScalaData {
 
 
   override def dateTimeNow(): String = super.dateTimeNow()
-
 
 }

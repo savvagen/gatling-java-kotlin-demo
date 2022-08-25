@@ -3,7 +3,7 @@ package com.example.data
 import io.gatling.core.feeder.FeederBuilderBase
 import io.gatling.core.Predef._
 
-object Feeders extends RandomData {
+object Feeders extends RandomScalaData {
 
   /*val categoryFeed: Iterator[Unit] = Iterator.continually {
     val cats = List("cats", "dogs", "test")

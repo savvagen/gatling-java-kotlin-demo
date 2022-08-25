@@ -12,7 +12,7 @@ plugins {
 ext {
     gatlingVersion = "3.7.4"
     scalaVersion = '2.13.7'
-    simulationName = System.getenv("SIMULATION_NAME") ?: "LoadSimulation.scala"
+    //simulationName = System.getenv("SIMULATION_NAME") ?: "LoadSimulation.scala"
 }
 
 group 'com.example'
@@ -91,12 +91,12 @@ test {
 }
 
 gatling {
-    //String simulationName = System.getenv("SIMULATION_NAME") ?: "LoadSimulation.scala"
+    String simulationName = System.getenv("SIMULATION_NAME") ?: "ScalaLoadSimulation.scala"
     gatlingVersion = "${project.gatlingVersion}"
     scalaVersion = "${project.scalaVersion}"
     simulations = {
         include "**/simulations/${simulationName}"
-        //include "**/simulations/LoadSimulation.scala" // --- Run Simulation from "scala" module
+        //include "**/simulations/ScalaLoadSimulation.scala" // --- Run Simulation from "scala" module
         //include "**/simulations/JavaLoadSimulation.java"   // --- Run Simulation from "java" module
         //include "**/simulations/KotlinLoadSimulation.kt"   // --- Run Simulation from "kotlin" module
         // More variants
@@ -160,7 +160,7 @@ task gatlingRunner(type: JavaExec, dependsOn: classes) {
 
 
 task gatlingRunnerJava(type: JavaExec, dependsOn: classes) {
-    main = 'com.example.GatlingRunnerJava'
+    main = 'com.example.RunnerJava'
     classpath sourceSets.gatling.runtimeClasspath
     jvmArgs = ['-server', '-Xms2g', '-Xmx4g', '-XX:-UseGCOverheadLimit',
                '-language:postfixOps',

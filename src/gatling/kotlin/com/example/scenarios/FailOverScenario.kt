@@ -10,7 +10,7 @@ object FailOverScenario {
     var atomicCounter = AtomicInteger(0)
 
     private fun counterCheck(): ChainBuilder =
-        doIf { session ->
+        doIf { _: Session ->
             atomicCounter.get() >= 5
         }.then(stopInjector("Found more than 5 http-errors..."))
 

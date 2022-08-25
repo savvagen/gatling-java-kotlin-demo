@@ -1,18 +1,9 @@
 package com.example.data
-
-import RandomDataJava.dateTimeNow
-import com.example.models.{Post, User}
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.javafaker.Faker
-import com.google.gson.Gson
 import io.gatling.core.session.Expression
 import io.gatling.commons.validation._
 
-import java.time.OffsetDateTime
-import java.util
-import java.util.{Date, Locale}
 
-object Templates extends RandomData {
+object Templates extends RandomScalaData {
 
   val userTemplate: Expression[String] = session =>
     for {
@@ -40,23 +31,11 @@ object Templates extends RandomData {
        |""".stripMargin.success*/
 
   val userTemplateRandom: Expression[String] = session =>
-    objectMapper.writeValueAsString(new User()
-      .setName(s"${faker.name().firstName()} ${faker.name().lastName()}")
-      .setUsername(faker.name.username())
-      .setEmail(faker.internet.emailAddress())
-      .setCreatedAt(RandomData.dateTimeNow())
-    ).success
+    randomUser().success
 
   val postTemplateRandom: Expression[String] = session => {
-    def randId: Integer = faker.random().nextInt(100, 999)
-    objectMapper.writeValueAsString(new Post()
-      .setTitle(s"Test Post from ${OffsetDateTime.now()} ${faker.random().nextInt(100000, 999999)}")
-      .setSubject("Performance Testing")
-      .setBody(faker.lorem().sentence())
-      .setUser(Integer.valueOf(session("userId").as[String]))
-      .setCreatedAt(dateTimeNow())
-      .setComments(util.Arrays.asList(randId, randId)) //.setComments(util.List.of(faker.random().nextInt(100, 999)))
-    ).success
+    def randId: Integer = faker.random().nextInt(1, 100)
+    randomPost(randId).success
   }
 
 }
