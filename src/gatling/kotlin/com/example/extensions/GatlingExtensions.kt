@@ -1,10 +1,8 @@
 package com.example.extensions
 
-import com.example.data.KotlinTemplates
 import com.example.modelds.Model
 import com.example.scenarios.FailOverScenario
 import com.google.gson.Gson
-import io.gatling.commons.stats.KO
 import io.gatling.core.Predef.*
 import io.gatling.javaapi.core.ActionBuilder
 import io.gatling.javaapi.core.ChainBuilder

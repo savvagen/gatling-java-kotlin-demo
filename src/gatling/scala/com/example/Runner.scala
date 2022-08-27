@@ -1,6 +1,6 @@
 package com.example
 
-import com.example.simulations.ScalaLoadSimulation
+import com.example.simulations.{HelloWorldSimulation, ScalaLoadSimulation}
 import io.gatling.app.Gatling
 import io.gatling.core.config.GatlingPropertiesBuilder
 
