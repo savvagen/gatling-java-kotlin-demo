@@ -25,6 +25,14 @@ val Int.sec: Duration get() = Duration.ofSeconds(this.toLong())
 Chain Builder extensions
  */
 
+fun ChainBuilder.stopInjectorIfFailed(): ChainBuilder {
+    return this.doIf { session ->
+        session.asScala().isFailed
+    }.then(
+        pause(5).stopInjector("Found failed http-request. The Injector was stopped after 5 sec.")
+    )
+}
+
 fun ChainBuilder.incrementErrorCounter(): ChainBuilder {
     return this.exec { session ->
         if (session.asScala().isFailed){ // session.asScala().status().name() == "KO"
@@ -32,14 +40,6 @@ fun ChainBuilder.incrementErrorCounter(): ChainBuilder {
         }
         session
     }
-}
-
-fun ChainBuilder.stopInjectorIfFailed(): ChainBuilder {
-    return this.doIf { session ->
-        session.asScala().isFailed
-    }.then(
-        pause(5).stopInjector("Found failed http-request. The Injector was stopped after 5 sec.")
-    )
 }
 
 val ChainBuilder.stopInjectorIfFailed: ChainBuilder get() = this.stopInjectorIfFailed()
@@ -106,9 +106,6 @@ val jsonAllItems: CheckBuilder.JsonOfTypeMultipleFind get()
 val jsonId: CheckBuilder.JsonOfTypeMultipleFind get()
     = CheckBuilder.JsonPath(jsonPath(toStringExpression("$.id"), defaultJsonPaths()));
 
-val all: CheckBuilder.JsonOfTypeMultipleFind get()
-    = CheckBuilder.JsonPath(jsonPath(toStringExpression("$.id"), defaultJsonPaths()));
-
 
 infix fun CheckBuilder.Find<Int>.shouldBe(status: Int) = this.shouldBe(status)
 
@@ -138,14 +135,11 @@ infix fun CheckBuilder.JsonOfTypeMultipleFind.saveAsList(variable: String)
 //infix fun CheckBuilder.JsonOfTypeMultipleFind.haveCount(count: Int)
 //        = this.count().shouldBe(count)
 
-infix fun CheckBuilder.JsonOfTypeMultipleFind.shouldBe(expected: String)
-        = this.shouldBe(expected)
+infix fun CheckBuilder.JsonOfTypeMultipleFind.shouldBe(expected: String) = this.shouldBe(expected)
 
-infix fun CheckBuilder.JsonOfTypeMultipleFind.shouldBe(expected: (Session) -> String)
-        = this.shouldBe(expected)
+infix fun CheckBuilder.JsonOfTypeMultipleFind.shouldBe(expected: (Session) -> String) = this.shouldBe(expected)
 
-val CheckBuilder.JsonOfTypeMultipleFind.count get()
-    = this.count().transform { count -> count.toInt() }
+val CheckBuilder.JsonOfTypeMultipleFind.count get() = this.count().transform { count -> count.toInt() }
 
 val CheckBuilder.JsonOfTypeMultipleFind.ofInt get() = this.ofInt()
 val CheckBuilder.JsonOfTypeMultipleFind.ofString get() = this.ofString()

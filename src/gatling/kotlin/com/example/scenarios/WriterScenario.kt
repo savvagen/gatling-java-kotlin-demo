@@ -3,12 +3,10 @@ package com.example.scenarios
 import com.example.data.*
 import com.example.extensions.*
 import com.example.modelds.Post
-import com.example.modelds.User
 import io.gatling.javaapi.core.ChainBuilder
 import io.gatling.javaapi.core.CoreDsl.*
 import io.gatling.javaapi.http.HttpDsl.http
 import io.gatling.javaapi.http.HttpRequestActionBuilder
-import kotlin.jvm.internal.Intrinsics.Kotlin
 
 class WriterScenario {
 
@@ -63,7 +61,6 @@ class WriterScenario {
             .check(jsonId.ofInt.isEL("#{postId}"))
             .check(jsonPath("$.user").ofInt.isEL("#{userId}"))
             .check(bodyString().saveAs("post"))
-
 
 
     fun scn(postsNumber: Int): ChainBuilder =
