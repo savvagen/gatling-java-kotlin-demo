@@ -1,0 +1,27 @@
+{
+  "simulation": "com.example.simulations.KotlinLoadSimulation",
+  "simulationId": "kotlinloadsimulation",
+  "start": 1662970308493,
+  "description": "",
+  "scenarios": ["Writer Scenario", "Reader Scenario"],
+  "assertions": [
+{
+  "path": "Global",
+  "target": "max of response time",
+  "condition": "is less than or equal to",
+  "expectedValues": [3000.0],
+  "result": true,
+  "message": "Global: max of response time is less than or equal to 3000.0",
+  "actualValue": [73.0]
+},
+{
+  "path": "Global",
+  "target": "percentage of successful events",
+  "condition": "is",
+  "expectedValues": [100.0],
+  "result": true,
+  "message": "Global: percentage of successful events is 100.0",
+  "actualValue": [100.0]
+}
+  ]
+}

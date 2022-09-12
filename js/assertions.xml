@@ -1,0 +1,8 @@
+<testsuite name="com.example.simulations.KotlinLoadSimulation" tests="2" errors="0" failures="0" time="0">
+<testcase name="Global: max of response time is less than or equal to 3000.0" status="true" time="0">
+  <system-out>Global: max of response time is less than or equal to 3000.0</system-out>
+</testcase>
+<testcase name="Global: percentage of successful events is 100.0" status="true" time="0">
+  <system-out>Global: percentage of successful events is 100.0</system-out>
+</testcase>
+</testsuite>
